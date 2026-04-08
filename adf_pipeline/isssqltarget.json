@@ -1,0 +1,17 @@
+{
+    "name": "isssqltarget",
+    "type": "Microsoft.DataFactory/factories/linkedservices",
+    "properties": {
+        "annotations": [],
+        "type": "AzureSqlDatabase",
+        "typeProperties": {
+            "server": "YOUR_SERVER_NAME.database.windows.net",
+            "database": "YOUR_DATABASE_NAME",
+            "encrypt": "mandatory",
+            "trustServerCertificate": false,
+            "authenticationType": "SQL",
+            "userName": "YOUR_SQL_USERNAME",
+            "encryptedCredential": "REMOVED_FOR_SECURITY"
+        }
+    }
+}

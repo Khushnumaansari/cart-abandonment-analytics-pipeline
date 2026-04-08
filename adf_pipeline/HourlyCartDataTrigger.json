@@ -1,0 +1,25 @@
+{
+    "name": "HourlyCartDataTrigger",
+    "properties": {
+        "description": "Runs every hour to fetch new cart data",
+        "annotations": [],
+        "runtimeState": "Started",
+        "pipelines": [
+            {
+                "pipelineReference": {
+                    "referenceName": "pl-staging-merge-upsert",
+                    "type": "PipelineReference"
+                }
+            }
+        ],
+        "type": "ScheduleTrigger",
+        "typeProperties": {
+            "recurrence": {
+                "frequency": "Hour",
+                "interval": 1,
+                "startTime": "2026-04-08T10:02:00",
+                "timeZone": "India Standard Time"
+            }
+        }
+    }
+}

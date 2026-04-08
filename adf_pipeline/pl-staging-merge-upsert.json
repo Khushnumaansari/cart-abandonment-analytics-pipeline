@@ -1,0 +1,287 @@
+{
+    "name": "pl-staging-merge-upsert",
+    "properties": {
+        "activities": [
+            {
+                "name": "copy-json-to-sql",
+                "type": "Copy",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "source": {
+                        "type": "JsonSource",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageReadSettings",
+                            "recursive": true,
+                            "wildcardFolderPath": "enriched_carts_*.json",
+                            "enablePartitionDiscovery": false
+                        },
+                        "formatSettings": {
+                            "type": "JsonReadSettings"
+                        }
+                    },
+                    "sink": {
+                        "type": "AzureSqlSink",
+                        "preCopyScript": "TRUNCATE TABLE cart_events",
+                        "writeBehavior": "insert",
+                        "sqlWriterUseTableLock": false,
+                        "disableMetricsCollection": false
+                    },
+                    "enableStaging": false,
+                    "translator": {
+                        "type": "TabularTranslator",
+                        "mappings": [
+                            {
+                                "source": {
+                                    "path": "$['cart_id']"
+                                },
+                                "sink": {
+                                    "name": "cart_id",
+                                    "type": "Int32"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['user_id']"
+                                },
+                                "sink": {
+                                    "name": "user_id",
+                                    "type": "Int32"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['total_products']"
+                                },
+                                "sink": {
+                                    "name": "total_products",
+                                    "type": "Int32"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['total_quantity']"
+                                },
+                                "sink": {
+                                    "name": "total_quantity",
+                                    "type": "Int32"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['cart_value']"
+                                },
+                                "sink": {
+                                    "name": "cart_value",
+                                    "type": "Decimal"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['product_count']"
+                                },
+                                "sink": {
+                                    "name": "product_count",
+                                    "type": "Int32"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['avg_product_price']"
+                                },
+                                "sink": {
+                                    "name": "avg_product_price",
+                                    "type": "Decimal"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['user_name']"
+                                },
+                                "sink": {
+                                    "name": "user_name",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['user_age']"
+                                },
+                                "sink": {
+                                    "name": "user_age",
+                                    "type": "Double"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['user_gender']"
+                                },
+                                "sink": {
+                                    "name": "user_gender",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['device_type']"
+                                },
+                                "sink": {
+                                    "name": "device_type",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['session_duration_minutes']"
+                                },
+                                "sink": {
+                                    "name": "session_duration_minutes",
+                                    "type": "Int32"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['timestamp']"
+                                },
+                                "sink": {
+                                    "name": "event_timestamp",
+                                    "type": "DateTime"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['abandoned']"
+                                },
+                                "sink": {
+                                    "name": "abandoned",
+                                    "type": "Boolean"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['abandonment_reason']"
+                                },
+                                "sink": {
+                                    "name": "abandonment_reason",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['cart_size_category']"
+                                },
+                                "sink": {
+                                    "name": "cart_size_category",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['primary_category']"
+                                },
+                                "sink": {
+                                    "name": "primary_category",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['revenue']"
+                                },
+                                "sink": {
+                                    "name": "revenue",
+                                    "type": "Decimal"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['potential_revenue']"
+                                },
+                                "sink": {
+                                    "name": "potential_revenue",
+                                    "type": "Decimal"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "inputs": [
+                    {
+                        "referenceName": "dsblobdatajson",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "referenceName": "dssqldatatable",
+                        "type": "DatasetReference"
+                    }
+                ]
+            },
+            {
+                "name": "upsert_main_cart_event",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "copy-json-to-sql",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[dbo].[sp_upsert_main_cart_event]"
+                },
+                "linkedServiceName": {
+                    "referenceName": "isssqltarget",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "refresh-all-tables",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "upsert_main_cart_event",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[dbo].[sp_refresh_all_tables]"
+                },
+                "linkedServiceName": {
+                    "referenceName": "isssqltarget",
+                    "type": "LinkedServiceReference"
+                }
+            }
+        ],
+        "annotations": [],
+        "lastPublishTime": "2026-04-07T04:07:58Z"
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}

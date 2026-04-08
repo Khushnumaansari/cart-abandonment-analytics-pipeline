@@ -1,0 +1,21 @@
+CREATE TABLE dbo.cart_events (
+    cart_id INT,
+    user_id INT,
+    total_products INT,
+    total_quantity INT,
+    cart_value DECIMAL(10,2),
+    product_count INT NULL,
+    avg_product_price DECIMAL(10,2),
+    user_name NVARCHAR(100),
+    user_age FLOAT NULL,
+    user_gender NVARCHAR(10) NULL,
+    device_type NVARCHAR(20) NULL,
+    session_duration_minutes INT,
+    event_timestamp DATETIME2 NOT NULL,
+    abandoned BIT NOT NULL,
+    abandonment_reason NVARCHAR(255) NULL,
+    cart_size_category NVARCHAR(50),
+    primary_category NVARCHAR(100),
+    revenue DECIMAL(10,2),
+    potential_revenue DECIMAL(10,2)
+);
