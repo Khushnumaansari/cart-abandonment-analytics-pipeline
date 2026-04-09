@@ -14,7 +14,8 @@ cart abandonment data using Azure cloud services.
 
 ## 🏗️ Architecture
 
-[Architecture diagram here]
+<img width="1214" height="1296" alt="architecture_diagram" src="https://github.com/user-attachments/assets/691b4dbb-9d47-4944-8882-929b170f2db3" />
+
 
 **Data flows automatically every hour:**
 1. Python script fetches data from public API (DummyJSON)
