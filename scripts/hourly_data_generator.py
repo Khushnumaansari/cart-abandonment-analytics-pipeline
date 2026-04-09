@@ -1,7 +1,6 @@
 from dotenv import load_dotenv
 load_dotenv()
 
-# hourly_data_generator.py
 import requests
 import random
 import json
@@ -10,7 +9,7 @@ from datetime import datetime, timedelta
 from azure.storage.blob import BlobServiceClient
 import os
 
-# ❌ NO random.seed(42) here - we want fresh data each run
+# ❌ NO random.seed(42) - we want fresh data each run
 
 def fetch_products():
     """Fetch products from DummyJSON API"""
@@ -18,22 +17,66 @@ def fetch_products():
     response = requests.get(url)
     return response.json()['products']
 
-def fetch_carts():
-    """Fetch carts from DummyJSON API"""
-    url = "https://dummyjson.com/carts?limit=100"
-    response = requests.get(url)
-    return response.json()['carts']
-
 def fetch_users():
     """Fetch users from DummyJSON API"""
     url = "https://dummyjson.com/users?limit=100"
     response = requests.get(url)
     return response.json()['users']
 
+def generate_unique_cart_ids(count=10):
+    """
+    Generate unique random 5-6 digit cart IDs
+    Ensures no duplicates within the batch
+    """
+    cart_ids = set()
+    
+    while len(cart_ids) < count:
+        # Generate random 5-6 digit number (10000 to 999999)
+        cart_id = random.randint(10000, 999999)
+        cart_ids.add(cart_id)
+    
+    return list(cart_ids)
+
+def generate_synthetic_carts(products, users, num_carts=10):
+    """
+    Generate completely NEW synthetic carts
+    (Not using DummyJSON carts API)
+    """
+    synthetic_carts = []
+    unique_cart_ids = generate_unique_cart_ids(num_carts)
+    
+    for cart_id in unique_cart_ids:
+        # Random user
+        user = random.choice(users)
+        
+        # Random number of products in cart (1-5 items)
+        num_items = random.randint(1, 5)
+        
+        # Select random products
+        cart_products = random.sample(products, num_items)
+        
+        cart = {
+            'id': cart_id,  # ✅ Unique random ID
+            'userId': user['id'],
+            'products': [
+                {
+                    'id': prod['id'],
+                    'quantity': random.randint(1, 3)
+                }
+                for prod in cart_products
+            ],
+            'totalProducts': len(cart_products),
+            'totalQuantity': sum([random.randint(1, 3) for _ in cart_products])
+        }
+        
+        synthetic_carts.append(cart)
+    
+    return synthetic_carts
+
 def enrich_cart_data(carts, products, users):
     """
-    YOUR EXACT SAME ENRICHMENT LOGIC FROM JUPYTER
-    Copy-paste your enrichment function here
+    Enrich cart data with business logic
+    ✅ Uses the unique cart IDs we generated
     """
     enriched_carts = []
     
@@ -57,7 +100,7 @@ def enrich_cart_data(carts, products, users):
         # Find user details
         user = next((u for u in users if u['id'] == cart['userId']), None)
         
-        # Abandonment probability (NO SEED - fresh randomness!)
+        # Abandonment probability (fresh randomness!)
         abandonment_probability = 0.3
         
         if cart_total > 500:
@@ -86,7 +129,8 @@ def enrich_cart_data(carts, products, users):
         ]
         
         enriched_cart = {
-            "cart_id": cart['id'],
+            # Use the unique cart_id (5-6 digits)
+            "cart_id": cart['id'],  # Already unique from generate_unique_cart_ids()
             "user_id": cart['userId'],
             "total_products": cart['totalProducts'],
             "total_quantity": cart['totalQuantity'],
@@ -98,8 +142,7 @@ def enrich_cart_data(carts, products, users):
             "user_gender": user['gender'] if user else None,
             "device_type": device_type,
             "session_duration_minutes": session_duration,
-            "timestamp": datetime.now().isoformat(),
-            "batch_id": datetime.now().strftime("%Y%m%d_%H%M"),
+            "event_timestamp": datetime.now().isoformat(),
             "abandoned": is_abandoned,
             "abandonment_reason": random.choice(abandonment_reasons) if is_abandoned else None,
             "cart_size_category": (
@@ -140,6 +183,7 @@ def upload_to_azure(data, connection_string, container_name):
         print(f"✅ Uploaded {blob_name} to Azure Blob Storage")
         print(f"   Container: {container_name}")
         print(f"   Size: {len(data)} carts")
+        print(f"   Cart IDs: {[d['cart_id'] for d in data]}")
         
         return blob_name
         
@@ -154,31 +198,37 @@ def main():
     print(f"{'='*60}")
     print(f"Timestamp: {datetime.now()}")
     
-    # Step 1: Fetch data from API
-    print("\n📡 Step 1: Fetching data from DummyJSON API...")
+    # Step 1: Fetch reference data from API
+    print("\n📡 Step 1: Fetching reference data from DummyJSON API...")
     products = fetch_products()
-    carts = fetch_carts()
     users = fetch_users()
-    print(f"   ✅ Fetched: {len(products)} products, {len(carts)} carts, {len(users)} users")
+    print(f"   ✅ Fetched: {len(products)} products, {len(users)} users")
     
-    # Step 2: Enrich data
-    print("\n🔧 Step 2: Enriching cart data with business logic...")
-    enriched_carts = enrich_cart_data(carts, products, users)
+    # Step 2: Generate NEW synthetic carts (not from API)
+    print("\n🎲 Step 2: Generating 10 NEW synthetic carts with unique IDs...")
+    synthetic_carts = generate_synthetic_carts(products, users, num_carts=10)
+    print(f"   ✅ Generated {len(synthetic_carts)} carts")
+    print(f"   Cart IDs: {[cart['id'] for cart in synthetic_carts]}")
     
-    # Step 3: Show statistics
+    # Step 3: Enrich data
+    print("\n🔧 Step 3: Enriching cart data with business logic...")
+    enriched_carts = enrich_cart_data(synthetic_carts, products, users)
+    
+    # Step 4: Show statistics
     df = pd.DataFrame(enriched_carts)
     abandonment_rate = (df['abandoned'].sum() / len(df) * 100)
     total_revenue = df['revenue'].sum()
     lost_revenue = df['potential_revenue'].sum()
     
-    print(f"\n📊 Step 3: Batch Statistics:")
+    print(f"\n📊 Step 4: Batch Statistics:")
     print(f"   Total carts: {len(df)}")
+    print(f"   Unique cart IDs: {df['cart_id'].nunique()}")
     print(f"   Abandonment rate: {abandonment_rate:.1f}%")
     print(f"   Revenue generated: ${total_revenue:,.2f}")
     print(f"   Revenue lost: ${lost_revenue:,.2f}")
     
-    # Step 4: Upload to Azure
-    print(f"\n☁️  Step 4: Uploading to Azure Blob Storage...")
+    # Step 5: Upload to Azure
+    print(f"\n☁️  Step 5: Uploading to Azure Blob Storage...")
     
     # Get connection string from environment variable
     connection_string = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
@@ -194,6 +244,7 @@ def main():
         with open(filename, 'w') as f:
             json.dump(enriched_carts, f, indent=2)
         print(f"   ✅ Saved locally: {filename}")
+        print(f"   Cart IDs in file: {[d['cart_id'] for d in enriched_carts]}")
     else:
         upload_to_azure(enriched_carts, connection_string, container_name)
     
