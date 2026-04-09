@@ -20,7 +20,8 @@
                         "storeSettings": {
                             "type": "AzureBlobStorageReadSettings",
                             "recursive": true,
-                            "wildcardFolderPath": "enriched_carts_*.json",
+                            "modifiedDatetimeEnd": null,
+                            "wildcardFileName": "enriched_carts_*.json",
                             "enablePartitionDiscovery": false
                         },
                         "formatSettings": {
@@ -29,7 +30,7 @@
                     },
                     "sink": {
                         "type": "AzureSqlSink",
-                        "preCopyScript": "TRUNCATE TABLE cart_events",
+                        "preCopyScript": "TRUNCATE TABLE dbo.cart_events",
                         "writeBehavior": "insert",
                         "sqlWriterUseTableLock": false,
                         "disableMetricsCollection": false
@@ -281,7 +282,7 @@
             }
         ],
         "annotations": [],
-        "lastPublishTime": "2026-04-07T04:07:58Z"
+        "lastPublishTime": "2026-04-08T13:47:11Z"
     },
     "type": "Microsoft.DataFactory/factories/pipelines"
 }
