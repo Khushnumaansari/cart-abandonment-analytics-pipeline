@@ -41,11 +41,6 @@ cart abandonment data using Azure cloud services.
 
 ---
 
-## 📁 Project Structure
-
-
----
-
 ## 🔄 Pipeline Details
 
 ### Stage 1: Data Ingestion
