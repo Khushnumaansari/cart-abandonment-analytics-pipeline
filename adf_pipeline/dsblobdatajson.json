@@ -52,8 +52,8 @@
                 "session_duration_minutes": {
                     "type": "integer"
                 },
-                "timestamp": {
-                    "type": "string"
+                "event_timestamp": {
+                "type": "string"
                 },
                 "abandoned": {
                     "type": "boolean"
