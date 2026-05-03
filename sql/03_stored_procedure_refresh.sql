@@ -43,7 +43,7 @@ CREATE TABLE dbo.CartData_Cleaned (
     avg_product_price DECIMAL(18,2),
     device_type NVARCHAR(50),
     session_duration_minutes INT,
-    timestamp DATETIME2,
+    event_timestamp DATETIME2,
     transaction_date DATE,
     transaction_hour INT,
     day_of_week NVARCHAR(20),
