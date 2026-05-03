@@ -148,10 +148,10 @@
                                 }
                             },
                             {
-                                "source": {
-                                    "path": "$['timestamp']"
+                                  "source": {
+                                    "path": "$['event_timestamp']"
                                 },
-                                "sink": {
+                                    "sink": {
                                     "name": "event_timestamp",
                                     "type": "DateTime"
                                 }
