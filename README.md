@@ -81,9 +81,9 @@ cart abandonment data using Azure cloud services.
 ## ⚙️ How to Run Locally
 
 1. Clone this repo
-2. Install dependencies: `pip install -r pipeline/requirements.txt`
+2. Install dependencies: `pip install -r scripts/requirements.txt`
 3. Add your Azure connection string to `.env` file
-4. Run: `python pipeline/hourly_data_generator.py`
+4. Run: `python scripts/hourly_data_generator.py`
 
 > Note: Azure credentials are not included. 
 > You will need your own Azure Storage and SQL accounts.
