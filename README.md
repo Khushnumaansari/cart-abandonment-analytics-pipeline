@@ -87,3 +87,12 @@ cart abandonment data using Azure cloud services.
 
 > Note: Azure credentials are not included. 
 > You will need your own Azure Storage and SQL accounts.
+
+---
+## Limitations & Future Improvements
+
+- The Python generator and ADF trigger currently run independently, so production deployment should use a single orchestrated trigger.
+- The pipeline should use event_id or batch_id instead of only cart_id for stronger deduplication.
+- A pipeline audit table can be added to track row counts and refresh status.
+- Blob files can be archived after processing to avoid scanning historical files repeatedly.
+- Power BI refresh can be scheduled after SQL procedure completion.
