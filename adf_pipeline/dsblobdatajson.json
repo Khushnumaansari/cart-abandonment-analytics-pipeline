@@ -1,0 +1,80 @@
+{
+    "name": "dsblobdatajson",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "lsblobstorage",
+            "type": "LinkedServiceReference"
+        },
+        "annotations": [],
+        "type": "Json",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "container": "cart-data"
+            }
+        },
+        "schema": {
+            "type": "object",
+            "properties": {
+                "cart_id": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
+                },
+                "total_products": {
+                    "type": "integer"
+                },
+                "total_quantity": {
+                    "type": "integer"
+                },
+                "cart_value": {
+                    "type": "number"
+                },
+                "product_count": {
+                    "type": "integer"
+                },
+                "avg_product_price": {
+                    "type": "number"
+                },
+                "user_name": {
+                    "type": "string"
+                },
+                "user_age": {
+                    "type": "number"
+                },
+                "user_gender": {
+                    "type": "string"
+                },
+                "device_type": {
+                    "type": "string"
+                },
+                "session_duration_minutes": {
+                    "type": "integer"
+                },
+                "timestamp": {
+                    "type": "string"
+                },
+                "abandoned": {
+                    "type": "boolean"
+                },
+                "abandonment_reason": {
+                    "type": "string"
+                },
+                "cart_size_category": {
+                    "type": "string"
+                },
+                "primary_category": {
+                    "type": "string"
+                },
+                "revenue": {
+                    "type": "number"
+                },
+                "potential_revenue": {
+                    "type": "number"
+                }
+            }
+        }
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,110 @@
+{
+    "name": "dssqldatatable",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "isssqltarget",
+            "type": "LinkedServiceReference"
+        },
+        "annotations": [],
+        "type": "AzureSqlTable",
+        "schema": [
+            {
+                "name": "cart_id",
+                "type": "int",
+                "precision": 10
+            },
+            {
+                "name": "user_id",
+                "type": "int",
+                "precision": 10
+            },
+            {
+                "name": "total_products",
+                "type": "int",
+                "precision": 10
+            },
+            {
+                "name": "total_quantity",
+                "type": "int",
+                "precision": 10
+            },
+            {
+                "name": "cart_value",
+                "type": "decimal",
+                "precision": 10,
+                "scale": 2
+            },
+            {
+                "name": "product_count",
+                "type": "int",
+                "precision": 10
+            },
+            {
+                "name": "avg_product_price",
+                "type": "decimal",
+                "precision": 10,
+                "scale": 2
+            },
+            {
+                "name": "user_name",
+                "type": "nvarchar"
+            },
+            {
+                "name": "user_age",
+                "type": "float",
+                "precision": 15
+            },
+            {
+                "name": "user_gender",
+                "type": "nvarchar"
+            },
+            {
+                "name": "device_type",
+                "type": "nvarchar"
+            },
+            {
+                "name": "session_duration_minutes",
+                "type": "int",
+                "precision": 10
+            },
+            {
+                "name": "event_timestamp",
+                "type": "datetime2",
+                "scale": 7
+            },
+            {
+                "name": "abandoned",
+                "type": "bit"
+            },
+            {
+                "name": "abandonment_reason",
+                "type": "nvarchar"
+            },
+            {
+                "name": "cart_size_category",
+                "type": "nvarchar"
+            },
+            {
+                "name": "primary_category",
+                "type": "nvarchar"
+            },
+            {
+                "name": "revenue",
+                "type": "decimal",
+                "precision": 10,
+                "scale": 2
+            },
+            {
+                "name": "potential_revenue",
+                "type": "decimal",
+                "precision": 10,
+                "scale": 2
+            }
+        ],
+        "typeProperties": {
+            "schema": "dbo",
+            "table": "cart_events"
+        }
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}
