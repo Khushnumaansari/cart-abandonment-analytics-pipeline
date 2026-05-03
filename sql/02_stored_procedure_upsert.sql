@@ -11,7 +11,7 @@ CREATE TABLE dbo.main_cart_events (
     user_gender NVARCHAR(10) NULL,
     device_type NVARCHAR(20),
     session_duration_minutes INT,
-    event_timestamp DATETIME2 NULL,
+    event_timestamp DATETIME2,
     abandoned BIT NULL,
     abandonment_reason NVARCHAR(255) NULL,
     cart_size_category NVARCHAR(50),
