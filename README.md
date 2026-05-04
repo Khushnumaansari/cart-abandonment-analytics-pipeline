@@ -7,14 +7,17 @@ cart abandonment data using Azure cloud services.
 ---
 
 ## 📊 Live Dashboard
-<img width="1379" height="779" alt="E-Commerce Cart" src="https://github.com/user-attachments/assets/f79a9c81-6383-44e2-a84e-808356624ca4" />
+
+<img width="1382" height="781" alt="Dashboard_01_executive_overview" src="https://github.com/user-attachments/assets/d0bc6ce4-8079-4c1f-a9c7-76e0ee23166c" />
+
 
 
 ---
 
 ## 🏗️ Architecture
 
-<img width="1214" height="1296" alt="architecture_diagram" src="https://github.com/user-attachments/assets/691b4dbb-9d47-4944-8882-929b170f2db3" />
+<img width="921" height="691" alt="Architecture_diagram" src="https://github.com/user-attachments/assets/d35166f8-685d-493b-a896-5e36e9f9420f" />
+
 
 
 **Data flows automatically every hour:**
